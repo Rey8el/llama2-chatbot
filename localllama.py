@@ -2,15 +2,24 @@ import streamlit as st
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import StrOutputParser
 from langchain_community.llms import Ollama
+from dotenv import load_dotenv
 import os
 
-# Load environment variables
-os.environ["LANGCHAIN_TRACING_V2"] = "true"
-os.environ["LANGCHAIN_API_KEY"] = os.getenv("LANGCHAIN_API_KEY")
+# Load environment variables from .env file
+load_dotenv()
+
+# Ensure the environment variable is set
+api_key = os.getenv("LANGCHAIN_API_KEY")
+if api_key:
+    os.environ["LANGCHAIN_TRACING_V2"] = "true"
+    os.environ["LANGCHAIN_API_KEY"] = api_key
+else:
+    st.error("LANGCHAIN_API_KEY environment variable is not set.")
+    st.stop()
 
 # Streamlit app
 def main():
-    st.title("Chat with OLLAMA")
+    st.title("Chat with LangChain")
     
     # Input from user
     user_input = st.text_input("Enter your question:")
